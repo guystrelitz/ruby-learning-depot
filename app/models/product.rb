@@ -6,5 +6,10 @@ class Product < ApplicationRecord
 		with: /\.(gif|jpg|png)\z/i,
 		message: 'must be a URL for a GIF, JPG or PNG image.'
 	}
-	validates :description, length: { minimum: 10, too_short: 'must be at least 10 characters long.' }
+	validates :description,
+		length: { 
+			within: 10..500, 
+			too_short: 'must be at least 10 characters long.', 
+			too_long: 'must be no more than 500 characters long.'
+		}
 end
