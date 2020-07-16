@@ -70,6 +70,7 @@ class ProductTest < ActiveSupport::TestCase
 	end
 
 	test 'product description must be <= 500 characters' do
+		# description with 501 characters
 		description = ''
 		50.times { description += '0123456789'}
 		description += 'a'
@@ -81,6 +82,10 @@ class ProductTest < ActiveSupport::TestCase
 			image_url: 'fred.gif')
 		assert product.invalid?, 'expected long description to be invalid'
 		assert_equal ['must be no more than 500 characters long.'], product.errors[:description]
+
+		# check 500 chars works
+		product.description = description.chop
+		assert product.valid?, '500 character description should be fine'
 	end
 
 end
