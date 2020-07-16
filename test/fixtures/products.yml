@@ -2,13 +2,13 @@
 
 one:
   title: MyString1
-  description: MyText
+  description: MyText longer than 10
   image_url: lorem.jpg
   price: 9.99
 
 two:
   title: MyString2
-  description: MyText
+  description: MyText longer than 10
   image_url: lorem.jpg
   price: 9.99
 
