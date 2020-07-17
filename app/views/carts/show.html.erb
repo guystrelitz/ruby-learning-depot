@@ -10,12 +10,14 @@
 				<td class="quantity"><%= item.quantity %></td>
 				<td><%= item.product.title %></td>
 				<td class="price"><%= number_to_currency item.total_price %></td>
+				<td class="buttons"><%= button_to '+', line_items_path(product_id: item.product) %></td>
 			</tr>
 		<% end %>
 		<tfoot>
 			<tr>
 				<th colspan="2">Total:</th>
 				<th class="price"><%= number_to_currency @cart.total_price %></th>
+				<td>&nbsp;</td>
 			</tr>
 		</tfoot>
 	</table>
