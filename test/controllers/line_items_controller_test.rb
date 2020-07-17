@@ -26,6 +26,36 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     assert_select 'td', 'Programming Ruby 1.9'
   end
 
+  test "should decrement line_item" do
+    line_item = line_items(:line_item_with_quantity_two)
+    delete line_item_url(line_item), params: {remove_one: true}
+
+    follow_redirect!
+
+    assert_select 'h2', 'Your Cart'
+    assert_select 'td.quantity', '1'
+  end
+
+  test "decrementing line_item to 0 should delete" do
+    line_item = line_items(:line_item_with_quantity_one)
+    delete line_item_url(line_item), params: {remove_one: true}
+
+    follow_redirect!
+
+    assert_select 'h2', 'Your Cart'
+    assert_select 'td.quantity', 1
+  end
+
+  test "decrementing final line_item to 0 should redirect to homepage" do
+    line_item = line_items(:one)
+    delete line_item_url(line_item), params: {remove_one: true}
+
+    follow_redirect!
+
+    assert_select 'h1', 'Your Pragmatic Catalogue'
+    assert_select '#notice', 'Your cart is currently empty.'
+  end
+
   test "should show line_item" do
     get line_item_url(@line_item)
     assert_response :success
@@ -46,6 +76,6 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
       delete line_item_url(@line_item)
     end
 
-    assert_redirected_to line_items_url
+    assert_redirected_to store_index_url
   end
 end

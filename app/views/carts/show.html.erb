@@ -11,6 +11,7 @@
 				<td><%= item.product.title %></td>
 				<td class="price"><%= number_to_currency item.total_price %></td>
 				<td class="buttons"><%= button_to '+', line_items_path(product_id: item.product) %></td>
+				<td class="buttons"><%= button_to '-', line_item_path(item.id), method: :delete, params: {remove_one: true} %></td>
 			</tr>
 		<% end %>
 		<tfoot>

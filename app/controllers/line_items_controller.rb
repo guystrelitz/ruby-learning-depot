@@ -57,9 +57,21 @@ class LineItemsController < ApplicationController
   # DELETE /line_items/1
   # DELETE /line_items/1.json
   def destroy
-    @line_item.destroy
+    if params[:remove_one] == 'true' && @line_item.quantity > 1
+      @line_item.quantity -= 1
+      @line_item.save
+    else
+      @line_item.destroy
+    end
+
     respond_to do |format|
-      format.html { redirect_to line_items_url, notice: 'Line item was successfully destroyed.' }
+      format.html do
+        if @line_item.cart.line_items.empty?
+          redirect_to store_index_url, notice: 'Your cart is currently empty.'
+        else
+          redirect_to @line_item.cart
+        end
+      end
       format.json { head :no_content }
     end
   end
@@ -72,6 +84,6 @@ class LineItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def line_item_params
-      params.require(:line_item).permit(:product_id)
+      params.require(:line_item).permit(:product_id, :remove_one)
     end
 end
