@@ -7,18 +7,3 @@ one:
 two:
   product: two
   cart: two
-
-line_item_with_quantity_two:
-  product: product_for_line_item_testing
-  cart: three
-  quantity: 2
-
-line_item_with_quantity_one:
-  product: product_for_line_item_testing
-  cart: four
-  quantity: 1
-
-another_line_item_in_cart_four:
-  product: two
-  cart: four
-  quantity: 1

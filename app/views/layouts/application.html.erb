@@ -23,6 +23,10 @@
           <li><a href="/news">News</a></li>
           <li><a href="/contact">Contact</a></li>
         </ul>
+
+        <% if @cart && !@cart.line_items.empty? %>
+          <div id="cart"><%= render @cart %></div>
+        <% end %>
       </nav>
 
       <main class='<%= controller.controller_name %>'>

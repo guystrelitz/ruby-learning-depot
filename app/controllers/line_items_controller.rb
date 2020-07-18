@@ -31,7 +31,7 @@ class LineItemsController < ApplicationController
 
     respond_to do |format|
       if @line_item.save
-        format.html { redirect_to @line_item.cart }
+        format.html { redirect_to store_index_url }
         format.json { render :show, status: :created, location: @line_item }
       else
         format.html { render :new }
@@ -65,13 +65,7 @@ class LineItemsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html do
-        if @line_item.cart.line_items.empty?
-          redirect_to store_index_url, notice: 'Your cart is currently empty.'
-        else
-          redirect_to @line_item.cart
-        end
-      end
+      format.html { redirect_to store_index_url }
       format.json { head :no_content }
     end
   end

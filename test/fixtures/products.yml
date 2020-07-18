@@ -19,10 +19,3 @@ ruby:
     to get working programs delivered fast, you should add Ruby to your toolbox.
   price: 49.50
   image_url: ruby.jpg
-
-product_for_line_item_testing:
-  title: Product for LineItem testing
-  description: 
-    This product has LineItems in carts, which can be safely decremented to zero if necessary.
-  price: 10.99
-  image_url: lorem.jpg

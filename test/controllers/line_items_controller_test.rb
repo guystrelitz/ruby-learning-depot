@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class LineItemsControllerTest < ActionDispatch::IntegrationTest
+  include CurrentCart
+
   setup do
     @line_item = line_items(:one)
   end
@@ -23,37 +25,64 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     follow_redirect!
 
     assert_select 'h2', 'Your Cart'
-    assert_select 'td', 'Programming Ruby 1.9'
+    assert_select 'nav td.quantity', 1
   end
 
   test "should decrement line_item" do
-    line_item = line_items(:line_item_with_quantity_two)
-    delete line_item_url(line_item), params: {remove_one: true}
+    2.times do
+      post line_items_url, params: { product_id: products(:ruby).id }
+      follow_redirect!
+    end
 
-    follow_redirect!
+    # we need the cart from the session – a fixture won't cut it
+    set_cart
+    cart = Cart.find(session[:cart_id])
 
-    assert_select 'h2', 'Your Cart'
-    assert_select 'td.quantity', '1'
+    # the number in the line item's quantity field should decrement
+    diff_string = "css_select('#cart td.quantity')[0].content.to_i"
+    assert_difference(diff_string, -1) do
+      delete line_item_url(cart.line_items[0]), params: {remove_one: true}
+      follow_redirect!
+    end
+
+    assert_select '#cart', 1
   end
 
   test "decrementing line_item to 0 should delete" do
-    line_item = line_items(:line_item_with_quantity_one)
-    delete line_item_url(line_item), params: {remove_one: true}
-
+    post line_items_url, params: { product_id: products(:one).id }
+    post line_items_url, params: { product_id: products(:two).id }
     follow_redirect!
 
-    assert_select 'h2', 'Your Cart'
-    assert_select 'td.quantity', 1
+    # we need the cart from the session – a fixture won't cut it
+    set_cart
+    cart = Cart.find(session[:cart_id])
+
+    # one of the line items should disappear, so its quantity field should go
+    diff_string = "css_select('#cart td.quantity').count"
+    assert_difference(diff_string, -1) do
+      delete line_item_url(cart.line_items[0]), params: {remove_one: true}
+      follow_redirect!
+    end
+
+    assert_select '#cart', 1
   end
 
-  test "decrementing final line_item to 0 should redirect to homepage" do
-    line_item = line_items(:one)
-    delete line_item_url(line_item), params: {remove_one: true}
-
+  test "decrementing final line_item to 0 should make cart disappear" do
+    post line_items_url, params: { product_id: products(:one).id }
     follow_redirect!
 
-    assert_select 'h1', 'Your Pragmatic Catalogue'
-    assert_select '#notice', 'Your cart is currently empty.'
+    # we need the cart from the session – a fixture won't cut it
+    set_cart
+    cart = Cart.find(session[:cart_id])
+
+    # the final line item is removed, so the cart should disappear
+    diff_string = "css_select('#cart').count"
+    assert_difference(diff_string, -1) do
+      delete line_item_url(cart.line_items[0]), params: {remove_one: true}
+      follow_redirect!
+    end
+
+    assert_select '#cart', 0
   end
 
   test "should show line_item" do
