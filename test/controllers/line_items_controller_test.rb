@@ -38,12 +38,13 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should decrement line_item" do
+    # add 2 items so we can then delete 1 and see the difference in quantity
     2.times do
       post line_items_url, params: { product_id: products(:ruby).id }
-      follow_redirect!
     end
 
     # we need the cart from the session – a fixture won't cut it
+    follow_redirect!
     set_cart
     cart = Cart.find(session[:cart_id])
 
@@ -55,6 +56,24 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_select '#cart', 1
+  end
+
+  test "should decrement line_item via ajax" do
+    # add 2 items so we can then delete 1 and see the difference in quantity
+    2.times do
+      post line_items_url, params: { product_id: products(:ruby).id }
+    end
+
+    # we need the cart from the session – a fixture won't cut it
+    follow_redirect!
+    set_cart
+    cart = Cart.find(session[:cart_id])
+
+    delete line_item_url(cart.line_items[0]), params: {remove_one: true}, xhr: true
+
+    assert_response :success
+    assert_match /<tr class=\\"line-item-highlight\\">/, @response.body
+    assert_match /<td class=\\"quantity\\">1<\\\/td>/, @response.body
   end
 
   test "decrementing line_item to 0 should delete" do
