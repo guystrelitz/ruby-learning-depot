@@ -25,9 +25,7 @@
         </ul>
 
         <div id="cart">
-          <% if @cart && !@cart.line_items.empty? %>
-            <%= render @cart %>
-          <% end %>
+          <%= render_if  @cart && @cart.line_items.any?,  @cart %>
         </div>
       </nav>
 
