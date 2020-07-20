@@ -35,7 +35,7 @@ class LineItemsController < ApplicationController
         format.json { render :show, status: :created, location: @line_item }
         format.js do
           @current_item = @line_item
-          render template: 'line_items/cart_ajax.js.erb'
+          render template: 'carts/cart_ajax.js.erb'
         end
       else
         format.html { render :new }
@@ -73,7 +73,7 @@ class LineItemsController < ApplicationController
       format.json { head :no_content }
       format.js do
         @current_item = @line_item
-        render template: 'line_items/cart_ajax.js.erb'
+        render template: 'carts/cart_ajax.js.erb'
       end
     end
   end

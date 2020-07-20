@@ -60,6 +60,10 @@ class CartsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to store_index_url }
+      format.js do
+        @cart = nil
+        render template: 'carts/cart_ajax.js.erb'
+      end
       format.json { head :no_content }
     end
   end

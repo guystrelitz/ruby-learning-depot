@@ -1,0 +1,6 @@
+cart = document.getElementById('cart')
+<% if @cart %>
+	cart.innerHTML = "<%= j render(@cart) %>"
+<% else %>
+	cart.innerHTML = ''
+<% end %>
