@@ -47,4 +47,32 @@
 			}
 		}
 	}
+
+
+	@keyframes product-highlight {
+		0% {
+			background: #8f8;
+		}
+		100% {
+			background: none;
+		}
+	}
+
+	@keyframes product-price-highlight {
+		0% {
+			background: #f88;
+		}
+		100% {
+			background: none;
+		}
+	}
+
+	li.product-highlight {
+		animation: product-highlight 1s;
+
+		div.price {
+			animation: product-price-highlight 1s;
+		}
+	}
+
 }
