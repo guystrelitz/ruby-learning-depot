@@ -28,6 +28,15 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     assert_select 'nav td.quantity', 1
   end
 
+  test "should create line_item via ajax" do
+    assert_difference('LineItem.count') do
+      post line_items_url, params: { product_id: products(:ruby).id }, xhr: true
+    end
+
+    assert_response :success
+    assert_match /<tr class=\\"line-item-highlight\\">/, @response.body
+  end
+
   test "should decrement line_item" do
     2.times do
       post line_items_url, params: { product_id: products(:ruby).id }
@@ -67,7 +76,7 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     assert_select '#cart', 1
   end
 
-  test "decrementing final line_item to 0 should make cart disappear" do
+  test "decrementing final line_item to 0 should make cart contents disappear" do
     post line_items_url, params: { product_id: products(:one).id }
     follow_redirect!
 
@@ -76,13 +85,13 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     cart = Cart.find(session[:cart_id])
 
     # the final line item is removed, so the cart should disappear
-    diff_string = "css_select('#cart').count"
+    diff_string = "css_select('div#cart article').count"
     assert_difference(diff_string, -1) do
       delete line_item_url(cart.line_items[0]), params: {remove_one: true}
       follow_redirect!
     end
 
-    assert_select '#cart', 0
+    assert_select 'div#cart article', 0
   end
 
   test "should show line_item" do
