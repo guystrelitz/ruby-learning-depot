@@ -17,7 +17,7 @@ class CartsTest < ApplicationSystemTestCase
     click_on "Create Cart"
 
     assert_text "Cart was successfully created"
-    click_on "Back"
+    click_on "Empty cart"
   end
 
   test "updating a Cart" do
@@ -27,7 +27,7 @@ class CartsTest < ApplicationSystemTestCase
     click_on "Update Cart"
 
     assert_text "Cart was successfully updated"
-    click_on "Back"
+    click_on "Empty cart"
   end
 
   test "destroying a Cart" do
@@ -36,6 +36,7 @@ class CartsTest < ApplicationSystemTestCase
       click_on "Destroy", match: :first
     end
 
-    assert_text "Cart was successfully destroyed"
+    # redirected back to the homepage
+    assert_current_path store_index_path
   end
 end
