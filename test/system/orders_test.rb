@@ -1,11 +1,17 @@
 require "application_system_test_case"
 require 'capybara/rspec/matchers'
 
-
-
 class OrdersTest < ApplicationSystemTestCase
+  include ActiveJob::TestHelper
+
   setup do
-    @order = orders(:one)
+    begin
+      @order = orders(:one)  
+    rescue Exception => e
+      puts "exception in setup"
+      raise
+    end
+    
   end
 
   test "visiting the index" do
@@ -58,6 +64,9 @@ class OrdersTest < ApplicationSystemTestCase
   end
 
   test "check routing number" do
+    LineItem.delete_all
+    Order.delete_all
+
     visit store_index_url
     click_on 'Add to Cart', match: :first
     click_on 'Checkout'
@@ -71,5 +80,23 @@ class OrdersTest < ApplicationSystemTestCase
     select 'Check', from: 'Pay type'
 
     assert_selector '#order_routing_number'
+
+    fill_in 'Routing #', with: '123456'
+    fill_in 'Account #', with: '987654'
+
+    perform_enqueued_jobs do
+      click_button 'Place Order'
+    end
+
+    orders = Order.all
+    assert_equal 1, orders.size
+
+    order = orders.first
+
+    assert_equal 'Dave Thomas',      order.name
+    assert_equal '123 Main St',  order.address
+    assert_equal 'dave@example.com', order.email
+    assert_equal 'Check',            order.pay_type
+    assert_equal 1,                  order.line_items.size
   end
 end

@@ -13,8 +13,8 @@ class CreditCardPayType extends React.Component {
 				<div className="field">
 					<label htmlFor="order_expiry_date">Expiry</label>
 					<input type="text"
-					       name="order[expiry_date]"
-					       id="order_expiry_date"
+					       name="order[expiration_date]"
+					       id="order_expiration_date"
 					       size="9" placeholder="eg
 					       03/19" />
 				</div>
