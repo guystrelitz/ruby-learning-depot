@@ -7,3 +7,8 @@ one:
 two:
   product: ruby
   cart: one
+
+line_item_on_an_order:
+  product: ruby
+  quantity: 1
+  order_id: 3
