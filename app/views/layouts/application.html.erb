@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>PragProg Books Online Store</title>
+    <title><%= t '.title' %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -18,10 +18,10 @@
     <section class="content">
       <nav class="side_nav">
         <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/questions">Questions</a></li>
-          <li><a href="/news">News</a></li>
-          <li><a href="/contact">Contact</a></li>
+          <li><a href="/"><%= t '.home' %></a></li>
+          <li><a href="/questions"><%= t '.questions' %></a></li>
+          <li><a href="/news"><%= t '.news' %></a></li>
+          <li><a href="/contact"><%= t '.contact' %></a></li>
         </ul>
 
         <% if session[:user_id] %>
